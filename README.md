@@ -1,6 +1,6 @@
 # Event & Ticket Management Platform - UI Design Files
 
-This package contains complete UI design mockups for your ICT4153 Group Project: Smart Event & Ticket Management Platform.
+This package contains complete UI design for Smart Event & Ticket Management Platform.
 
 ## 📁 Files Included
 
@@ -119,8 +119,6 @@ All mockups use a clean, icon-free approach:
    - Database operations
 
 ## 📋 Project Requirements Coverage
-
-All ICT4153 mandatory requirements are addressed:
 
 ✅ **Advanced Navigation**
 - Named routes
@@ -245,8 +243,6 @@ Refer to the design system document for:
 These design files are provided for your ICT4153 academic project.
 
 ---
-
-**Good luck with your Mobile Application Development project!**
 
 Created for: Dept of ICT, FOT, UOR 2026
 Project: ICT4153 – Smart Event & Ticket Management Platform
