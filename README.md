@@ -244,5 +244,3 @@ These design files are provided for your ICT4153 academic project.
 
 ---
 
-Created for: Dept of ICT, FOT, UOR 2026
-Project: ICT4153 – Smart Event & Ticket Management Platform
