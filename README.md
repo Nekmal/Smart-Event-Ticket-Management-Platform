@@ -125,35 +125,35 @@ All mockups use a clean, icon-free approach:
 - Nested navigation (bottom navigation with stacks)
 - Route guards (auth-based routing)
 
-✅ **State Management**
+ **State Management**
 - Riverpod/Bloc patterns provided
 - Clean separation of UI and business logic
 
-✅ **Clean Architecture**
+ **Clean Architecture**
 - Presentation Layer
 - Business Logic Layer
 - Data Layer (Repository pattern)
 
-✅ **Local & Remote Data**
+ **Local & Remote Data**
 - SQLite schemas for all tables
 - REST API integration examples
 - Async/await patterns
 
-✅ **Authentication**
+ **Authentication**
 - Multi-role system (User/Organizer)
 - Mock/Firebase compatible
 
-✅ **Device Features**
+ **Device Features**
 - QR code generation and scanning
 - Push notifications scheduling
 
-✅ **Performance & UX**
+ **Performance & UX**
 - Lazy loading examples
 - Form validation
 - Loading states
 - Error handling
 
-## 🚀 Implementation Steps
+##  Implementation Steps
 
 1. **Set up Flutter project structure**
    - Create folders: lib/presentation, lib/business_logic, lib/data
@@ -183,7 +183,7 @@ All mockups use a clean, icon-free approach:
    - Implement API calls
    - Add error handling
 
-## 📱 Screen Navigation Flow
+##  Screen Navigation Flow
 
 ```
 Authentication
@@ -203,7 +203,7 @@ Organizer Role:
 └── Settings
 ```
 
-## 🎯 Key Implementation Notes
+##  Key Implementation Notes
 
 ### QR Code Generation
 - Use `qr_flutter` package
@@ -229,7 +229,7 @@ Organizer Role:
 - bookings → tickets (booking_id)
 - tickets → seats (seat_id)
 
-## 📞 Support & Questions
+##  Support & Questions
 
 Refer to the design system document for:
 - Detailed component specifications
@@ -238,7 +238,7 @@ Refer to the design system document for:
 - Testing strategies
 - Performance optimization tips
 
-## 📄 License
+##  License
 
 These design files are provided for your ICT4153 academic project.
 
