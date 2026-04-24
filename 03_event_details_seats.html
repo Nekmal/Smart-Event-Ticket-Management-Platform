@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details & Seat Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 380px;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            border: 0.5px solid #e0e0e0;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .event-header-image {
+            height: 200px;
+            background: linear-gradient(135deg, #185FA5 0%, #0C447C 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .event-icon-large {
+            text-align: center;
+            color: white;
+        }
+        
+        .event-icon-circle {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .event-icon-large p {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .header-btn {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .back-btn {
+            top: 12px;
+            left: 12px;
+        }
+        
+        .favorite-btn {
+            top: 12px;
+            right: 12px;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .event-title h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .event-title p {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+        
+        .stat-card {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .stat-card p:first-child {
+            font-size: 13px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card p.stat-value {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .stat-card p.stat-sub {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .stat-card .price {
+            font-size: 20px;
+            font-weight: 500;
+            color: #185FA5;
+        }
+        
+        .location-box {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .location-icon {
+            width: 20px;
+            height: 20px;
+            background: #757575;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .location-box h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .location-box p {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .location-box a {
+            font-size: 13px;
+            color: #185FA5;
+            text-decoration: none;
+            margin-left: auto;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .about-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #757575;
+            margin-bottom: 24px;
+        }
+        
+        .organizer-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .organizer-avatar {
+            width: 44px;
+            height: 44px;
+            background: #185FA5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .organizer-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .organizer-info p {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .organizer-card a {
+            font-size: 13px;
+            color: #185FA5;
+            text-decoration: none;
+            margin-left: auto;
+        }
+        
+        .availability-box {
+            background: #EAF3DE;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .availability-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .availability-text h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #639922;
+            margin-bottom: 2px;
+        }
+        
+        .availability-text p {
+            font-size: 13px;
+            color: #639922;
+            opacity: 0.8;
+        }
+        
+        .availability-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid #639922;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #639922;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .page-header {
+            padding: 16px 20px;
+            border-bottom: 0.5px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .page-header button {
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+        }
+        
+        .page-info h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .page-info p {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .stage-indicator {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .stage-indicator p {
+            font-size: 13px;
+            font-weight: 500;
+            color: #757575;
+        }
+        
+        .seat-grid {
+            margin-bottom: 24px;
+        }
+        
+        .seat-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .seat-label {
+            font-size: 11px;
+            color: #757575;
+            width: 16px;
+        }
+        
+        .seat {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .seat.available {
+            background: #E1F5EE;
+        }
+        
+        .seat.selected {
+            background: #185FA5;
+            border: 2px solid #0C447C;
+        }
+        
+        .seat.booked {
+            background: #D3D1C7;
+        }
+        
+        .seat-spacer {
+            width: 8px;
+        }
+        
+        .legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-item span {
+            font-size: 12px;
+            color: #757575;
+        }
+        
+        .selection-summary {
+            background: #E6F1FB;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .summary-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .summary-left p:first-child {
+            font-size: 13px;
+            color: #185FA5;
+            margin-bottom: 2px;
+        }
+        
+        .summary-left p:last-child {
+            font-size: 15px;
+            font-weight: 500;
+            color: #185FA5;
+        }
+        
+        .summary-right p:first-child {
+            font-size: 13px;
+            color: #185FA5;
+            text-align: right;
+            margin-bottom: 2px;
+        }
+        
+        .summary-right p:last-child {
+            font-size: 18px;
+            font-weight: 500;
+            color: #185FA5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 30px; color: #212121;">Event Details & Seat Selection</h1>
+        
+        <!-- Event Details Screen -->
+        <div class="screen">
+            <div class="event-header-image">
+                <div class="event-icon-large">
+                    <div class="event-icon-circle">TS</div>
+                    <p>Tech Summit 2026</p>
+                </div>
+                <button class="header-btn back-btn">←</button>
+                <button class="header-btn favorite-btn">♡</button>
+            </div>
+            
+            <div class="content">
+                <div class="event-title">
+                    <h2>Tech Summit 2026</h2>
+                    <p>Annual technology conference</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <p>Date & Time</p>
+                        <p class="stat-value">May 15, 2026</p>
+                        <p class="stat-sub">9:00 AM - 5:00 PM</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <p>Price</p>
+                        <p class="price">LKR 15,000</p>
+                        <p class="stat-sub">per ticket</p>
+                    </div>
+                </div>
+                
+                <div class="location-box">
+                    <div class="location-icon"></div>
+                    <div style="flex: 1;">
+                        <h4>Colombo Convention Centre</h4>
+                        <p>Bauddhaloka Mawatha, Colombo 7</p>
+                    </div>
+                    <a href="#">Map</a>
+                </div>
+                
+                <h3 class="section-title">About this event</h3>
+                <p class="about-text">Join industry leaders and innovators for a full day of insightful talks, workshops, and networking opportunities. This premier technology conference brings together professionals from across the region to explore emerging trends and technologies shaping our future.</p>
+                
+                <h3 class="section-title">Organizer</h3>
+                <div class="organizer-card">
+                    <div class="organizer-avatar">TE</div>
+                    <div class="organizer-info" style="flex: 1;">
+                        <h4>Tech Events LK</h4>
+                        <p>156 events organized</p>
+                    </div>
+                    <a href="#">View</a>
+                </div>
+                
+                <div class="availability-box">
+                    <div class="availability-content">
+                        <div class="availability-text">
+                            <h4>248 seats available</h4>
+                            <p>Out of 500 total seats</p>
+                        </div>
+                        <div class="availability-circle">50%</div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary">Select Seats</button>
+            </div>
+        </div>
+
+        <!-- Seat Selection Screen -->
+        <div class="screen">
+            <div class="page-header">
+                <button>←</button>
+                <div class="page-info" style="flex: 1;">
+                    <h3>Select Your Seats</h3>
+                    <p>Tech Summit 2026</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                <div class="stage-indicator">
+                    <p>STAGE</p>
+                </div>
+                
+                <div class="seat-grid">
+                    <!-- Row A -->
+                    <div class="seat-row">
+                        <span class="seat-label">A</span>
+                        <div class="seat booked"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat selected"></div>
+                        <div class="seat selected"></div>
+                        <div class="seat-spacer"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                    </div>
+                    
+                    <!-- Row B -->
+                    <div class="seat-row">
+                        <span class="seat-label">B</span>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat-spacer"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                    </div>
+                    
+                    <!-- Row C -->
+                    <div class="seat-row">
+                        <span class="seat-label">C</span>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat-spacer"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat booked"></div>
+                    </div>
+                    
+                    <!-- Row D -->
+                    <div class="seat-row">
+                        <span class="seat-label">D</span>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat-spacer"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                    </div>
+                    
+                    <!-- Row E -->
+                    <div class="seat-row">
+                        <span class="seat-label">E</span>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat-spacer"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #E1F5EE;"></div>
+                        <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #185FA5; border: 2px solid #0C447C;"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-box" style="background: #D3D1C7;"></div>
+                        <span>Booked</span>
+                    </div>
+                </div>
+                
+                <div class="selection-summary">
+                    <div class="summary-content">
+                        <div class="summary-left">
+                            <p>Selected seats</p>
+                            <p>A3, A4</p>
+                        </div>
+                        <div class="summary-right">
+                            <p>Total amount</p>
+                            <p>LKR 30,000</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary">Continue to Payment</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
