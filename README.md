@@ -2,7 +2,7 @@
 
 This package contains complete UI design for Smart Event & Ticket Management Platform.
 
-## 📁 Files Included
+##  Files Included
 
 ### HTML Mockup Files (8 separate screens)
 
@@ -68,7 +68,7 @@ This package contains complete UI design for Smart Event & Ticket Management Pla
 - Testing strategies
 - Deployment checklist
 
-## 🎨 Design Features
+##  Design Features
 
 ### Icon-Free Professional Design
 All mockups use a clean, icon-free approach:
@@ -91,7 +91,7 @@ All mockups use a clean, icon-free approach:
 - Professional typography (Roboto/Inter recommended)
 - Responsive 380px mobile width
 
-## 💻 How to Use These Files
+##  How to Use These Files
 
 ### Viewing the Mockups
 1. Open any HTML file in your web browser
@@ -118,9 +118,9 @@ All mockups use a clean, icon-free approach:
    - API integration
    - Database operations
 
-## 📋 Project Requirements Coverage
+##  Project Requirements Coverage
 
-✅ **Advanced Navigation**
+ **Advanced Navigation**
 - Named routes
 - Nested navigation (bottom navigation with stacks)
 - Route guards (auth-based routing)
