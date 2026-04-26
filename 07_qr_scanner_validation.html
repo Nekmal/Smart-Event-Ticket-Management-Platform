@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner & Validation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 380px;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            border: 0.5px solid #e0e0e0;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .scanner-header {
+            padding: 16px 20px;
+            border-bottom: 0.5px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: black;
+            color: white;
+        }
+        
+        .scanner-header button {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+        }
+        
+        .scanner-info h2 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .scanner-info p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .camera-view {
+            background: black;
+            height: 320px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .scan-frame {
+            width: 240px;
+            height: 240px;
+            border: 3px solid white;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.6);
+        }
+        
+        .frame-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .corner-tl {
+            top: -2px;
+            left: -2px;
+            border-top: 4px solid #639922;
+            border-left: 4px solid #639922;
+            border-radius: 12px 0 0 0;
+        }
+        
+        .corner-tr {
+            top: -2px;
+            right: -2px;
+            border-top: 4px solid #639922;
+            border-right: 4px solid #639922;
+            border-radius: 0 12px 0 0;
+        }
+        
+        .corner-bl {
+            bottom: -2px;
+            left: -2px;
+            border-bottom: 4px solid #639922;
+            border-left: 4px solid #639922;
+            border-radius: 0 0 0 12px;
+        }
+        
+        .corner-br {
+            bottom: -2px;
+            right: -2px;
+            border-bottom: 4px solid #639922;
+            border-right: 4px solid #639922;
+            border-radius: 0 0 12px 0;
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #639922, transparent);
+        }
+        
+        .scan-instruction {
+            position: absolute;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .info-box {
+            background: #E6F1FB;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .info-box-content {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .info-text p:first-child {
+            font-size: 13px;
+            color: #185FA5;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .info-text ul {
+            font-size: 13px;
+            color: #185FA5;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #212121;
+            border: 0.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .success-header {
+            background: linear-gradient(135deg, #639922 0%, #3B6D11 100%);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        
+        .error-header {
+            background: linear-gradient(135deg, #E24B4A 0%, #A32D2D 100%);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        
+        .result-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+        }
+        
+        .success-header h2,
+        .error-header h2 {
+            color: white;
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .success-header p,
+        .error-header p {
+            color: rgba(255,255,255,0.85);
+            font-size: 14px;
+        }
+        
+        .reference-box {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .reference-box p:first-child {
+            font-size: 13px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+        
+        .reference-box p:last-child {
+            font-size: 18px;
+            font-weight: 500;
+            color: #212121;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .detail-card {
+            border: 0.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: #185FA5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .user-info h3 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .user-info p {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .detail-divider {
+            border-top: 0.5px solid #e0e0e0;
+            padding-top: 16px;
+        }
+        
+        .detail-card h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .detail-icon {
+            width: 16px;
+            height: 16px;
+            background: #e0e0e0;
+            border-radius: 3px;
+        }
+        
+        .detail-meta span {
+            font-size: 13px;
+            color: #757575;
+        }
+        
+        .validation-box {
+            background: #EAF3DE;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .validation-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .validation-text p:first-child {
+            font-size: 13px;
+            color: #639922;
+            margin-bottom: 2px;
+        }
+        
+        .validation-text p:last-child {
+            font-size: 15px;
+            font-weight: 500;
+            color: #639922;
+        }
+        
+        .validation-icon {
+            font-size: 32px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-primary {
+            flex: 1;
+            padding: 12px;
+            background: #639922;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            background: #185FA5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .error-box {
+            background: #FCEBEB;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .error-content {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .error-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .error-text p:first-child {
+            font-size: 15px;
+            color: #E24B4A;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .error-text p:last-child {
+            font-size: 13px;
+            color: #E24B4A;
+        }
+        
+        .error-divider {
+            border-top: 0.5px solid rgba(226, 75, 74, 0.3);
+            padding-top: 16px;
+        }
+        
+        .error-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .error-row span:first-child {
+            font-size: 13px;
+            color: #E24B4A;
+        }
+        
+        .error-row span:last-child {
+            font-size: 13px;
+            font-weight: 500;
+            color: #E24B4A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 30px; color: #212121;">QR Scanner & Validation</h1>
+        
+        <!-- QR Scanner Screen -->
+        <div class="screen">
+            <div class="scanner-header">
+                <button>←</button>
+                <div class="scanner-info" style="flex: 1;">
+                    <h2>Scan Ticket</h2>
+                    <p>Position QR code in the frame</p>
+                </div>
+                <button>L</button>
+            </div>
+            
+            <div class="camera-view">
+                <div class="scan-frame">
+                    <div class="frame-corner corner-tl"></div>
+                    <div class="frame-corner corner-tr"></div>
+                    <div class="frame-corner corner-bl"></div>
+                    <div class="frame-corner corner-br"></div>
+                    <div class="scan-line"></div>
+                </div>
+                <p class="scan-instruction">Align QR code within the frame</p>
+            </div>
+            
+            <div class="content">
+                <div class="info-box">
+                    <div class="info-box-content">
+                        <span class="info-icon">i</span>
+                        <div class="info-text">
+                            <p>Scanning tips</p>
+                            <ul>
+                                <li>Ensure good lighting</li>
+                                <li>Hold camera steady</li>
+                                <li>Keep QR code flat and visible</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-secondary">Manual Entry</button>
+            </div>
+        </div>
+
+        <!-- Valid Ticket Result -->
+        <div class="screen">
+            <div class="success-header">
+                <div class="result-icon">✓</div>
+                <h2>Valid Ticket</h2>
+                <p>Admit this guest</p>
+            </div>
+            
+            <div class="content">
+                <div class="reference-box">
+                    <p>Ticket reference</p>
+                    <p>TKT-2026-A3A4</p>
+                </div>
+                
+                <div class="detail-card">
+                    <div class="user-info">
+                        <div class="user-avatar">JD</div>
+                        <div>
+                            <h3>John Doe</h3>
+                            <p>john.doe@email.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-divider">
+                        <h4>Tech Summit 2026</h4>
+                        
+                        <div class="detail-meta">
+                            <div class="detail-icon"></div>
+                            <span>May 15, 2026 • 9:00 AM</span>
+                        </div>
+                        <div class="detail-meta">
+                            <div class="detail-icon"></div>
+                            <span>Colombo Convention Centre</span>
+                        </div>
+                        <div class="detail-meta">
+                            <div class="detail-icon"></div>
+                            <span>Seats A3, A4 • VIP Section</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="validation-box">
+                    <div class="validation-content">
+                        <div class="validation-text">
+                            <p>Validation time</p>
+                            <p>May 15, 2026 • 8:47 AM</p>
+                        </div>
+                        <div class="validation-icon">⏰</div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn-primary">Mark as Checked In</button>
+                    <button class="btn-secondary">Scan Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invalid Ticket Result -->
+        <div class="screen">
+            <div class="error-header">
+                <div class="result-icon">!</div>
+                <h2>Invalid Ticket</h2>
+                <p>Do not admit</p>
+            </div>
+            
+            <div class="content">
+                <div class="error-box">
+                    <div class="error-content">
+                        <span class="error-icon">✕</span>
+                        <div class="error-text">
+                            <p>Ticket already used</p>
+                            <p>This ticket was checked in 32 minutes ago and cannot be used again.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="error-divider">
+                        <div class="error-row">
+                            <span>First check-in</span>
+                            <span>8:15 AM</span>
+                        </div>
+                        <div class="error-row">
+                            <span>Verified by</span>
+                            <span>Staff #12</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reference-box">
+                    <p>Ticket reference</p>
+                    <p>TKT-2026-B7B8</p>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-box-content">
+                        <span class="info-icon">i</span>
+                        <div class="info-text">
+                            <p>Common reasons for invalid tickets:</p>
+                            <ul>
+                                <li>Already checked in</li>
+                                <li>Cancelled or refunded</li>
+                                <li>Counterfeit ticket</li>
+                                <li>Wrong event or date</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn-secondary">Contact Support</button>
+                    <button class="btn-action">Scan Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
