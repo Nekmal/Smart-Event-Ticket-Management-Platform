@@ -235,7 +235,3 @@ Refer to the design system document for:
 - Database migration guides
 - Testing strategies
 - Performance optimization tips
-
-##  License
----
-
