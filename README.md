@@ -1,7 +1,5 @@
 # Event & Ticket Management Platform - UI Design Files
 
-This package contains complete UI design for Smart Event & Ticket Management Platform.
-
 ##  Files Included
 
 ### HTML Mockup Files (8 separate screens)
@@ -239,8 +237,5 @@ Refer to the design system document for:
 - Performance optimization tips
 
 ##  License
-
-These design files are provided for your ICT4153 academic project.
-
 ---
 
